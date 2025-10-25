@@ -1,6 +1,5 @@
 {
   "log": {
-    "level": "warn",
     "output": "box.log",
     "timestamp": true
   },
@@ -8,7 +7,7 @@
     "servers": [
       {
         "tag": "dns-remote",
-        "address": "udp://1.1.1.1",
+        "address": "",
         "address_resolver": "dns-direct"
       },
       {
@@ -18,7 +17,7 @@
       },
       {
         "tag": "dns-direct",
-        "address": "1.1.1.1",
+        "address": "",
         "address_resolver": "dns-local",
         "detour": "direct"
       },
@@ -34,50 +33,48 @@
     ],
     "rules": [
       {
-        "domain": "connectivitycheck.gstatic.com",
+        "domain": "",
+        "server": "dns-direct"
+      },
+      {
+        "domain": "",
         "server": "dns-remote",
         "rewrite_ttl": 3000
       },
       {
         "rule_set": [
-          "geoip-ru",
-          "geosite-ru"
+          "geoip-",
+          "geosite-"
         ],
         "server": "dns-direct"
       },
       {
-        "domain_suffix": ".ru",
+        "domain_suffix": ".",
         "server": "dns-direct"
       }
     ],
     "final": "dns-remote",
     "static_ips": {
       "sky.rethinkdns.com": [
-        "104.17.148.22",
         "104.17.147.22",
-        "8.6.112.9",
-        "8.47.69.9",
-        "2a06:98c1:3123:8000::9",
-        "2a06:98c1:3122:8000::9"
+        "104.17.148.22",
+        "104.18.1.48",
+        "104.18.0.48"
       ]
-    },
-    "independent_cache": true
+    }
   },
   "inbounds": [
     {
       "type": "mixed",
       "tag": "mixed-in",
       "listen": "127.0.0.1",
-      "listen_port": 12334,
       "sniff": true,
-      "sniff_override_destination": true,
-      "set_system_proxy": true
+      "sniff_override_destination": true
     },
     {
       "type": "direct",
       "tag": "dns-in",
-      "listen": "127.0.0.1",
-      "listen_port": 16450
+      "listen": "127.0.0.1"
     }
   ],
   "outbounds": [
@@ -86,7 +83,7 @@
       "tag": "select",
       "outbounds": [
         "auto",
-        "Нидерланды 🇳🇱 § 0"
+        "Финляндия 🇫🇮 § 0"
       ],
       "default": "auto"
     },
@@ -94,19 +91,16 @@
       "type": "urltest",
       "tag": "auto",
       "outbounds": [
-        "Нидерланды 🇳🇱 § 0"
+        "Финляндия 🇫🇮 § 0"
       ],
-      "url": "http://connectivitycheck.gstatic.com/generate_204",
-      "interval": "10m0s",
-      "tolerance": 1,
-      "idle_timeout": "30m0s"
+      "tolerance": 1
     },
     {
       "type": "vless",
-      "tag": "Нидерланды 🇳🇱 § 0",
-      "server": "94.131.105.210",
+      "tag": "Финляндия 🇫🇮 § 0",
+      "server": "141.98.169.57",
       "server_port": 443,
-      "uuid": "afb45b67-2d98-47db-b53e-3cc80eae1f29",
+      "uuid": "f1a6b703-5da6-429f-badd-2d6393d670a9",
       "flow": "xtls-rprx-vision",
       "tls": {
         "enabled": true,
@@ -134,9 +128,7 @@
       "type": "direct",
       "tag": "direct-fragment",
       "tls_fragment": {
-        "enabled": true,
-        "size": "10-30",
-        "sleep": "2-8"
+        "enabled": true
       }
     },
     {
@@ -151,13 +143,13 @@
   "route": {
     "rules": [
       {
-        "domain": ".ru",
+        "domain": ".",
         "outbound": "direct"
       },
       {
         "rule_set": [
-          "geoip-ru",
-          "geosite-ru"
+          "geoip-",
+          "geosite-"
         ],
         "outbound": "direct"
       },
@@ -181,31 +173,21 @@
     "rule_set": [
       {
         "type": "remote",
-        "tag": "geoip-ru",
+        "tag": "geoip-",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/country/geoip-ru.srs",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/country/geoip-.srs",
         "update_interval": "120h0m0s"
       },
       {
         "type": "remote",
-        "tag": "geosite-ru",
+        "tag": "geosite-",
         "format": "binary",
-        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/country/geosite-ru.srs",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/country/geosite-.srs",
         "update_interval": "120h0m0s"
       }
     ],
     "final": "select",
     "auto_detect_interface": true,
     "override_android_vpn": true
-  },
-  "experimental": {
-    "cache_file": {
-      "enabled": true,
-      "path": "clash.db"
-    },
-    "clash_api": {
-      "external_controller": "127.0.0.1:16756",
-      "secret": "QRWCWvSMGE04Jvas"
-    }
   }
 }
