@@ -53,24 +53,36 @@
     "final": "dns-remote",
     "static_ips": {
       "sky.rethinkdns.com": [
-        "104.17.147.22",
         "104.17.148.22",
-        "8.47.69.9",
-        "8.6.112.9"
+        "104.17.147.22",
+        "104.18.0.48",
+        "104.18.1.48",
+        "2606:4700::6812:130",
+        "2606:4700::6812:30"
       ]
     },
     "independent_cache": true
   },
   "inbounds": [
     {
+      "type": "tun",
+      "tag": "tun-in",
+      "mtu": 9000,
+      "inet4_address": "172.19.0.1/28",
+      "inet6_address": "fdfe:dcba:9876::1/126",
+      "auto_route": true,
+      "endpoint_independent_nat": true,
+      "stack": "system",
+      "sniff": true,
+      "sniff_override_destination": true
+    },
+    {
       "type": "mixed",
       "tag": "mixed-in",
       "listen": "127.0.0.1",
       "listen_port": 12334,
       "sniff": true,
-      "sniff_override_destination": true,
-      "domain_strategy": "prefer_ipv4",
-      "set_system_proxy": true
+      "sniff_override_destination": true
     },
     {
       "type": "direct",
@@ -85,7 +97,7 @@
       "tag": "select",
       "outbounds": [
         "auto",
-        "Нидерланды 🇳🇱 § 0"
+        "Goose_8169124- § 0"
       ],
       "default": "auto"
     },
@@ -93,7 +105,7 @@
       "type": "urltest",
       "tag": "auto",
       "outbounds": [
-        "Нидерланды 🇳🇱 § 0"
+        "Goose_8169124- § 0"
       ],
       "url": "http://connectivitycheck.gstatic.com/generate_204",
       "interval": "10m0s",
@@ -102,22 +114,27 @@
     },
     {
       "type": "vless",
-      "tag": "Нидерланды 🇳🇱 § 0",
-      "server": "85.209.153.174",
+      "tag": "Goose_8169124- § 0",
+      "server": "85.192.49.236",
       "server_port": 443,
-      "uuid": "a0b6378a-67ff-4445-aaeb-fe6a862b4560",
-      "flow": "xtls-rprx-vision",
+      "uuid": "Goose_8169124",
       "tls": {
         "enabled": true,
-        "server_name": "www.microsoft.com",
+        "server_name": "ya.ru",
         "utls": {
           "enabled": true,
-          "fingerprint": "chrome"
+          "fingerprint": "firefox"
         },
         "reality": {
           "enabled": true,
-          "public_key": "JZH3FlmdsSsisI50I2YU1ZOEwgZcMWi7m6oj3mWVlHQ"
+          "public_key": "n0TMZv_gwjUTzIcQzCr-9YvelYQq2V87nfh5K7hM7V4",
+          "short_id": "ffffffffff"
         }
+      },
+      "transport": {
+        "type": "grpc",
+        "idle_timeout": "15s",
+        "ping_timeout": "15s"
       },
       "packet_encoding": "xudp"
     },
@@ -133,9 +150,7 @@
       "type": "direct",
       "tag": "direct-fragment",
       "tls_fragment": {
-        "enabled": true,
-        "size": "10-30",
-        "sleep": "2-8"
+        "enabled": true
       }
     },
     {
@@ -149,6 +164,17 @@
   ],
   "route": {
     "rules": [
+      {
+        "rule_set": [
+          "geosite-ads",
+          "geosite-malware",
+          "geosite-phishing",
+          "geosite-cryptominers",
+          "geoip-malware",
+          "geoip-phishing"
+        ],
+        "outbound": "block"
+      },
       {
         "domain": ".ru",
         "outbound": "direct"
@@ -175,6 +201,15 @@
       {
         "clash_mode": "Global",
         "outbound": "select"
+      },
+      {
+        "process_name": [
+          "Hiddify",
+          "Hiddify.exe",
+          "HiddifyCli",
+          "HiddifyCli.exe"
+        ],
+        "outbound": "bypass"
       }
     ],
     "rule_set": [
@@ -191,6 +226,48 @@
         "format": "binary",
         "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/country/geosite-ru.srs",
         "update_interval": "120h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-ads",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/block/geosite-category-ads-all.srs",
+        "update_interval": "120h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-malware",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/block/geosite-malware.srs",
+        "update_interval": "120h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-phishing",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/block/geosite-phishing.srs",
+        "update_interval": "120h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-cryptominers",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/block/geosite-cryptominers.srs",
+        "update_interval": "120h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "geoip-phishing",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/block/geoip-phishing.srs",
+        "update_interval": "120h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "geoip-malware",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/hiddify/hiddify-geo/rule-set/block/geoip-malware.srs",
+        "update_interval": "120h0m0s"
       }
     ],
     "final": "select",
@@ -204,7 +281,7 @@
     },
     "clash_api": {
       "external_controller": "127.0.0.1:16756",
-      "secret": "oMBpQm_DdUzSwvdx"
+      "secret": "XPwfWC28s-hMfTpt"
     }
   }
 }
